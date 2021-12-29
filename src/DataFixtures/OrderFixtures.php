@@ -23,6 +23,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
                 "user" => $user,
                 "status" => Order::ORDER_STATUS_PAID,
                 "created_at" => new DateTimeImmutable("NOW"),
+                "reference" => "ERF25ER",
             ]
         ];
 
@@ -33,6 +34,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
             $order->setUser($orderInfos["user"]);
             $order->setStatus($orderInfos["status"]);
             $order->setCreatedAt($orderInfos["created_at"]);
+            $order->setReference($orderInfos["reference"]);
 
             $manager->persist($order);
         }
