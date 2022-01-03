@@ -5,27 +5,27 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use App\Entity\Order;
+use App\Entity\Cart;
 
-class OrderPromotionFixtures extends Fixture implements DependentFixtureInterface
+class CartPromotionFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        $orderRepository = $manager->getRepository("App\Entity\Order");
+        $cartRepository = $manager->getRepository("App\Entity\Cart");
         $promotionRepository = $manager->getRepository("App\Entity\Promotion");
 
-        $order = $orderRepository->findOneByReference("ERF25ER");
+        $cart = $cartRepository->findOneByReference("ERF25ER");
         $promotion = $promotionRepository->findOneByCode("WELCOME");
 
-        $order->addPromotion($promotion);
+        $cart->addPromotion($promotion);
 
-        $manager->persist($order);
-
+        $manager->persist($cart);
+        
         $manager->flush();
     }
 
     public function getDependencies(): array
     {
-        return array("App\DataFixtures\OrderFixtures", "App\DataFixtures\PromotionFixtures");
+        return array("App\DataFixtures\CartFixtures", "App\DataFixtures\PromotionFixtures");
     }
 }

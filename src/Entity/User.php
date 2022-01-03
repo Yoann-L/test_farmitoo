@@ -45,15 +45,15 @@ class User
     private $promotions;
 
     /**
-     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Cart::class, mappedBy="user")
      */
-    private $orders;
+    private $carts;
 
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
         $this->promotions = new ArrayCollection();
-        $this->orders = new ArrayCollection();
+        $this->carts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -152,29 +152,29 @@ class User
     }
 
     /**
-     * @return Collection|Order[]
+     * @return Collection|Cart[]
      */
-    public function getOrders(): Collection
+    public function getCarts(): Collection
     {
-        return $this->orders;
+        return $this->carts;
     }
 
-    public function addOrder(Order $order): self
+    public function addCart(Cart $cart): self
     {
-        if (!$this->orders->contains($order)) {
-            $this->orders[] = $order;
-            $order->setUser($this);
+        if (!$this->carts->contains($cart)) {
+            $this->carts[] = $cart;
+            $cart->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeOrder(Order $order): self
+    public function removeCart(Cart $cart): self
     {
-        if ($this->orders->removeElement($order)) {
+        if ($this->carts->removeElement($cart)) {
             // set the owning side to null (unless already changed)
-            if ($order->getUser() === $this) {
-                $order->setUser(null);
+            if ($cart->getUser() === $this) {
+                $cart->setUser(null);
             }
         }
 

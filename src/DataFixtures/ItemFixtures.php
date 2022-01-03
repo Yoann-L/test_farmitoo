@@ -11,22 +11,22 @@ class ItemFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        $orderRepository = $manager->getRepository("App\Entity\Order");
+        $cartRepository = $manager->getRepository("App\Entity\Cart");
         $productRepository = $manager->getRepository("App\Entity\Product");
 
-        $order = $orderRepository->findOneByReference("ERF25ER");
+        $cart = $cartRepository->findOneByReference("ERF25ER");
         $product1 = $productRepository->findOneByReference("ABCD1234");
         $product2 = $productRepository->findOneByReference("542424AZ");
 
         $items = [
             [
                 "product" => $product1,
-                "order" => $order,
+                "cart" => $cart,
                 "quantity" => 10
             ],
             [
                 "product" => $product2,
-                "order" => $order,
+                "cart" => $cart,
                 "quantity" => 1
             ]
         ];
@@ -34,7 +34,7 @@ class ItemFixtures extends Fixture implements DependentFixtureInterface
         foreach ($items as $itemInfos) {
             $item = new Item();
             $item->setProduct($itemInfos["product"]);
-            $item->setOrder($itemInfos["order"]);
+            $item->setCart($itemInfos["cart"]);
             $item->setQuantity($itemInfos["quantity"]);
 
             $manager->persist($item);
@@ -45,6 +45,6 @@ class ItemFixtures extends Fixture implements DependentFixtureInterface
 
     public function getDependencies(): array
     {
-        return array("App\DataFixtures\ProductFixtures", "App\DataFixtures\OrderFixtures");
+        return array("App\DataFixtures\ProductFixtures", "App\DataFixtures\CartFixtures");
     }
 }

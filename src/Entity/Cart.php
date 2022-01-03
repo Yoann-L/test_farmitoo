@@ -2,18 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\OrderRepository;
+use App\Repository\CartRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=OrderRepository::class)
- * @ORM\Table(name="`order`")
+ * @ORM\Entity(repositoryClass=CartRepository::class)
  */
-class Order
+class Cart
 {
-    const ORDER_STATUS_PAID = "PAID";
+    const CART_CREATED = "CREATED";
+    const CART_PAID = "PAID";
 
     /**
      * @ORM\Id
@@ -23,16 +23,9 @@ class Order
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Address::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=Country::class)
      */
-    private $deliveryAddress;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Address::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $billingAddress;
+    private $country;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -40,30 +33,34 @@ class Order
     private $status;
 
     /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="carts")
+     */
+    private $user;
+
+    /**
      * @ORM\Column(type="datetime_immutable")
      */
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="orders")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
-    private $user;
+    private $reference;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Promotion::class, inversedBy="orders")
+     * @ORM\Column(type="datetime_immutable", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Promotion::class)
      */
     private $promotions;
 
     /**
-     * @ORM\OneToMany(targetEntity=Item::class, mappedBy="order")
+     * @ORM\OneToMany(targetEntity=Item::class, mappedBy="cart")
      */
     private $items;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $reference;
 
     public function __construct()
     {
@@ -76,26 +73,14 @@ class Order
         return $this->id;
     }
 
-    public function getDeliveryAddress(): ?Address
+    public function getCountry(): ?Country
     {
-        return $this->deliveryAddress;
+        return $this->country;
     }
 
-    public function setDeliveryAddress(?Address $deliveryAddress): self
+    public function setCountry(?Country $country): self
     {
-        $this->deliveryAddress = $deliveryAddress;
-
-        return $this;
-    }
-
-    public function getBillingAddress(): ?Address
-    {
-        return $this->billingAddress;
-    }
-
-    public function setBillingAddress(?Address $billingAddress): self
-    {
-        $this->billingAddress = $billingAddress;
+        $this->country = $country;
 
         return $this;
     }
@@ -112,6 +97,18 @@ class Order
         return $this;
     }
 
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -124,14 +121,26 @@ class Order
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getReference(): ?string
     {
-        return $this->user;
+        return $this->reference;
     }
 
-    public function setUser(?User $user): self
+    public function setReference(string $reference): self
     {
-        $this->user = $user;
+        $this->reference = $reference;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
@@ -172,7 +181,7 @@ class Order
     {
         if (!$this->items->contains($item)) {
             $this->items[] = $item;
-            $item->setOrder($this);
+            $item->setCart($this);
         }
 
         return $this;
@@ -182,22 +191,10 @@ class Order
     {
         if ($this->items->removeElement($item)) {
             // set the owning side to null (unless already changed)
-            if ($item->getOrder() === $this) {
-                $item->setOrder(null);
+            if ($item->getCart() === $this) {
+                $item->setCart(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getReference(): ?string
-    {
-        return $this->reference;
-    }
-
-    public function setReference(string $reference): self
-    {
-        $this->reference = $reference;
 
         return $this;
     }
