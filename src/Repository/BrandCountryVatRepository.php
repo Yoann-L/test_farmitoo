@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\BrandCountryTVA;
+use App\Entity\BrandCountryVat;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method BrandCountryTVA|null find($id, $lockMode = null, $lockVersion = null)
- * @method BrandCountryTVA|null findOneBy(array $criteria, array $orderBy = null)
- * @method BrandCountryTVA[]    findAll()
- * @method BrandCountryTVA[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method BrandCountryVat|null find($id, $lockMode = null, $lockVersion = null)
+ * @method BrandCountryVat|null findOneBy(array $criteria, array $orderBy = null)
+ * @method BrandCountryVat[]    findAll()
+ * @method BrandCountryVat[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class BrandCountryTVARepository extends ServiceEntityRepository
+class BrandCountryVatRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, BrandCountryTVA::class);
+        parent::__construct($registry, BrandCountryVat::class);
     }
 
     // /**
-    //  * @return BrandCountryTVA[] Returns an array of BrandCountryTVA objects
+    //  * @return BrandCountryVat[] Returns an array of BrandCountryVat objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class BrandCountryTVARepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?BrandCountryTVA
+    public function findOneBySomeField($value): ?BrandCountryVat
     {
         return $this->createQueryBuilder('b')
             ->andWhere('b.exampleField = :val')

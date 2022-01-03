@@ -53,19 +53,19 @@ class Cart
     private $updatedAt;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Promotion::class)
-     */
-    private $promotions;
-
-    /**
      * @ORM\OneToMany(targetEntity=Item::class, mappedBy="cart")
      */
     private $items;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PromotionHistory::class, mappedBy="cart")
+     */
+    private $promotionHistories;
+
     public function __construct()
     {
-        $this->promotions = new ArrayCollection();
         $this->items = new ArrayCollection();
+        $this->promotionHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -146,30 +146,6 @@ class Cart
     }
 
     /**
-     * @return Collection|Promotion[]
-     */
-    public function getPromotions(): Collection
-    {
-        return $this->promotions;
-    }
-
-    public function addPromotion(Promotion $promotion): self
-    {
-        if (!$this->promotions->contains($promotion)) {
-            $this->promotions[] = $promotion;
-        }
-
-        return $this;
-    }
-
-    public function removePromotion(Promotion $promotion): self
-    {
-        $this->promotions->removeElement($promotion);
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Item[]
      */
     public function getItems(): Collection
@@ -193,6 +169,36 @@ class Cart
             // set the owning side to null (unless already changed)
             if ($item->getCart() === $this) {
                 $item->setCart(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PromotionHistory[]
+     */
+    public function getPromotionHistories(): Collection
+    {
+        return $this->promotionHistories;
+    }
+
+    public function addPromotionHistory(PromotionHistory $promotionHistory): self
+    {
+        if (!$this->promotionHistories->contains($promotionHistory)) {
+            $this->promotionHistories[] = $promotionHistory;
+            $promotionHistory->setCart($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromotionHistory(PromotionHistory $promotionHistory): self
+    {
+        if ($this->promotionHistories->removeElement($promotionHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($promotionHistory->getCart() === $this) {
+                $promotionHistory->setCart(null);
             }
         }
 

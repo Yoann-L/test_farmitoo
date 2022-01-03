@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\BrandCountryTVARepository;
+use App\Repository\BrandCountryVatRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=BrandCountryTVARepository::class)
+ * @ORM\Entity(repositoryClass=BrandCountryVatRepository::class)
  */
-class BrandCountryTVA
+class BrandCountryVat
 {
     /**
      * @ORM\Id
@@ -18,7 +18,7 @@ class BrandCountryTVA
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Brand::class, inversedBy="brandCountryTVAs")
+     * @ORM\ManyToOne(targetEntity=Brand::class, inversedBy="brandCountryVATs")
      * @ORM\JoinColumn(nullable=false)
      */
     private $brand;
@@ -32,7 +32,7 @@ class BrandCountryTVA
     /**
      * @ORM\Column(type="float")
      */
-    private $TVA;
+    private $vat;
 
     public function getId(): ?int
     {
@@ -63,14 +63,14 @@ class BrandCountryTVA
         return $this;
     }
 
-    public function getTVA(): ?float
+    public function getVat(): ?float
     {
-        return $this->TVA;
+        return $this->vat;
     }
 
-    public function setTVA(float $TVA): self
+    public function setVat(float $vat): self
     {
-        $this->TVA = $TVA;
+        $this->vat = $vat;
 
         return $this;
     }

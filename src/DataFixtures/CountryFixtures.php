@@ -15,25 +15,25 @@ class CountryFixtures extends Fixture
                 "iso" => "FR",
                 "iso3" => "FRA",
                 "name" => "France",
-                "tva" => 20
+                "vat" => 20
             ],
             [
                 "iso" => "BE",
                 "iso3" => "BEL",
                 "name" => "Belgium",
-                "tva" => 21
+                "vat" => 21
             ],
             [
                 "iso" => "DE",
                 "iso3" => "DEU",
                 "name" => "Germany",
-                "tva" => 16
+                "vat" => 16
             ],
             [
                 "iso" => "PL",
                 "iso3" => "POL",
                 "name" => "Poland",
-                "tva" => 23
+                "vat" => 23
             ]
         ];
 
@@ -42,7 +42,7 @@ class CountryFixtures extends Fixture
             $country->setISO($countryInfos["iso"]);
             $country->setISO3($countryInfos["iso3"]);
             $country->setName($countryInfos["name"]);
-            $country->setTVA($countryInfos["tva"]);
+            $country->setVat($countryInfos["vat"]);
 
             $manager->persist($country);
         }

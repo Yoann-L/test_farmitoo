@@ -39,11 +39,6 @@ class Product
     private $brand;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Promotion::class, inversedBy="products")
-     */
-    private $promotions;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $status;
@@ -52,6 +47,11 @@ class Product
      * @ORM\Column(type="string", length=255)
      */
     private $reference;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Promotion::class, mappedBy="products")
+     */
+    private $promotions;
 
     public function __construct()
     {
@@ -99,30 +99,6 @@ class Product
         return $this;
     }
 
-    /**
-     * @return Collection|Promotion[]
-     */
-    public function getPromotions(): Collection
-    {
-        return $this->promotions;
-    }
-
-    public function addPromotion(Promotion $promotion): self
-    {
-        if (!$this->promotions->contains($promotion)) {
-            $this->promotions[] = $promotion;
-        }
-
-        return $this;
-    }
-
-    public function removePromotion(Promotion $promotion): self
-    {
-        $this->promotions->removeElement($promotion);
-
-        return $this;
-    }
-
     public function getStatus(): ?bool
     {
         return $this->status;
@@ -143,6 +119,33 @@ class Product
     public function setReference(string $reference): self
     {
         $this->reference = $reference;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Promotion[]
+     */
+    public function getPromotions(): Collection
+    {
+        return $this->promotions;
+    }
+
+    public function addPromotion(Promotion $promotion): self
+    {
+        if (!$this->promotions->contains($promotion)) {
+            $this->promotions[] = $promotion;
+            $promotion->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromotion(Promotion $promotion): self
+    {
+        if ($this->promotions->removeElement($promotion)) {
+            $promotion->removeProduct($this);
+        }
 
         return $this;
     }

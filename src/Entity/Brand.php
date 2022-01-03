@@ -40,7 +40,7 @@ class Brand
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $tva;
+    private $vat;
 
     /**
      * @ORM\OneToMany(targetEntity=Product::class, mappedBy="brand")
@@ -48,14 +48,14 @@ class Brand
     private $products;
 
     /**
-     * @ORM\OneToMany(targetEntity=BrandCountryTVA::class, mappedBy="brand")
+     * @ORM\OneToMany(targetEntity=BrandCountryVat::class, mappedBy="brand")
      */
-    private $brandCountryTVAs;
+    private $brandCountryVATs;
 
     public function __construct()
     {
         $this->products = new ArrayCollection();
-        $this->brandCountryTVAs = new ArrayCollection();
+        $this->brandCountryVATs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -99,14 +99,14 @@ class Brand
         return $this;
     }
 
-    public function getTva(): ?float
+    public function getVat(): ?float
     {
-        return $this->tva;
+        return $this->vat;
     }
 
-    public function setTva(?float $tva): self
+    public function setVat(?float $vat): self
     {
-        $this->tva = $tva;
+        $this->vat = $vat;
 
         return $this;
     }
@@ -142,29 +142,29 @@ class Brand
     }
 
     /**
-     * @return Collection|BrandCountryTVA[]
+     * @return Collection|BrandCountryVat[]
      */
-    public function getBrandCountryTVAs(): Collection
+    public function getBrandCountryVats(): Collection
     {
-        return $this->brandCountryTVAs;
+        return $this->brandCountryVATs;
     }
 
-    public function addBrandCountryTVA(BrandCountryTVA $brandCountryTVA): self
+    public function addBrandCountryVat(BrandCountryVat $brandCountryVat): self
     {
-        if (!$this->brandCountryTVAs->contains($brandCountryTVA)) {
-            $this->brandCountryTVAs[] = $brandCountryTVA;
-            $brandCountryTVA->setBrand($this);
+        if (!$this->brandCountryVATs->contains($brandCountryVAT)) {
+            $this->brandCountryVATs[] = $brandCountryVAT;
+            $brandCountryVAT->setBrand($this);
         }
 
         return $this;
     }
 
-    public function removeBrandCountryTVA(BrandCountryTVA $brandCountryTVA): self
+    public function removeBrandCountryVat(BrandCountryVat $brandCountryVAT): self
     {
-        if ($this->brandCountryTVAs->removeElement($brandCountryTVA)) {
+        if ($this->brandCountryVATs->removeElement($brandCountryVAT)) {
             // set the owning side to null (unless already changed)
-            if ($brandCountryTVA->getBrand() === $this) {
-                $brandCountryTVA->setBrand(null);
+            if ($brandCountryVAT->getBrand() === $this) {
+                $brandCountryVAT->setBrand(null);
             }
         }
 

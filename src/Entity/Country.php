@@ -35,7 +35,7 @@ class Country
     /**
      * @ORM\Column(type="float")
      */
-    private $tva;
+    private $vat;
 
     public function getId(): ?int
     {
@@ -78,14 +78,14 @@ class Country
         return $this;
     }
 
-    public function getTva(): ?float
+    public function getVat(): ?float
     {
-        return $this->tva;
+        return $this->vat;
     }
 
-    public function setTva(float $tva): self
+    public function setVat(float $vat): self
     {
-        $this->tva = $tva;
+        $this->vat = $vat;
 
         return $this;
     }

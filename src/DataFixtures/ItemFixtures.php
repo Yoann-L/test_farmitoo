@@ -14,20 +14,26 @@ class ItemFixtures extends Fixture implements DependentFixtureInterface
         $cartRepository = $manager->getRepository("App\Entity\Cart");
         $productRepository = $manager->getRepository("App\Entity\Product");
 
-        $cart = $cartRepository->findOneByReference("ERF25ER");
+        $cart = $cartRepository->findOneByReference("LHPG523");
         $product1 = $productRepository->findOneByReference("ABCD1234");
-        $product2 = $productRepository->findOneByReference("542424AZ");
+        $product2 = $productRepository->findOneByReference("253974EK");
+        $product3 = $productRepository->findOneByReference("542424AZ");
 
         $items = [
             [
                 "product" => $product1,
                 "cart" => $cart,
-                "quantity" => 10
+                "quantity" => 1
             ],
             [
                 "product" => $product2,
                 "cart" => $cart,
-                "quantity" => 1
+                "quantity" => 3
+            ],
+            [
+                "product" => $product3,
+                "cart" => $cart,
+                "quantity" => 5
             ]
         ];
 

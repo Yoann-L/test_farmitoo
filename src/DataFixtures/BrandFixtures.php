@@ -15,13 +15,13 @@ class BrandFixtures extends Fixture
                 "name" => "Farmitoo",
                 "slug" => "farmitoo",
                 "status" => Brand::BRAND_ENABLE,
-                "tva" => 20
+                "vat" => 20
             ],
             [
                 "name" => "Gallagher",
                 "slug" => "gallagher",
                 "status" => Brand::BRAND_ENABLE,
-                "tva" => 5
+                "vat" => 5
             ]
         ];
 
@@ -30,7 +30,7 @@ class BrandFixtures extends Fixture
             $brand->setName($brandInfos["name"]);
             $brand->setSlug($brandInfos["slug"]);
             $brand->setStatus($brandInfos["status"]);
-            $brand->setTVA($brandInfos["tva"]);
+            $brand->setVat($brandInfos["vat"]);
 
             $manager->persist($brand);
         }

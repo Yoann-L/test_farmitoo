@@ -15,6 +15,10 @@ class Promotion
     const PROMOTION_ENABLE = true;
     const PROMOTION_DISABLE = false;
 
+    const PROMOTION_TYPE_CART = "CART";
+    const PROMOTION_TYPE_USER = "USER";
+    const PROMOTION_TYPE_PRODUCT = "PRODUCT";
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -28,14 +32,39 @@ class Promotion
     private $code;
 
     /**
-     * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @ORM\Column(type="boolean")
+     */
+    private $status;
+
+    /**
+     * @ORM\Column(type="datetime_immutable")
      */
     private $expiratedAt;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $usageLimitByUser;
+
+    /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $quantityAvailable;
+    private $nbProductStock;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $minPriceCart;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $minNbProductCart;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="promotions")
+     */
+    private $user;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -45,32 +74,32 @@ class Promotion
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $discountValue;
+    private $discountFix;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $status;
+    private $freeShippingFees;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Product::class, mappedBy="promotions")
+     * @ORM\Column(type="string", length=255)
+     */
+    private $type;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Product::class, inversedBy="promotions")
      */
     private $products;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="promotions")
+     * @ORM\OneToMany(targetEntity=PromotionHistory::class, mappedBy="promotion")
      */
-    private $users;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $minAmount;
+    private $promotionHistories;
 
     public function __construct()
     {
         $this->products = new ArrayCollection();
-        $this->users = new ArrayCollection();
+        $this->promotionHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -90,26 +119,86 @@ class Promotion
         return $this;
     }
 
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
     public function getExpiratedAt(): ?\DateTimeImmutable
     {
         return $this->expiratedAt;
     }
 
-    public function setExpiratedAt(?\DateTimeImmutable $expiratedAt): self
+    public function setExpiratedAt(\DateTimeImmutable $expiratedAt): self
     {
         $this->expiratedAt = $expiratedAt;
 
         return $this;
     }
 
-    public function getQuantityAvailable(): ?int
+    public function getUsageLimitByUser(): ?int
     {
-        return $this->quantityAvailable;
+        return $this->usageLimitByUser;
     }
 
-    public function setQuantityAvailable(?int $quantityAvailable): self
+    public function setUsageLimitByUser(int $usageLimitByUser): self
     {
-        $this->quantityAvailable = $quantityAvailable;
+        $this->usageLimitByUser = $usageLimitByUser;
+
+        return $this;
+    }
+
+    public function getNbProductStock(): ?int
+    {
+        return $this->nbProductStock;
+    }
+
+    public function setNbProductStock(?int $nbProductStock): self
+    {
+        $this->nbProductStock = $nbProductStock;
+
+        return $this;
+    }
+
+    public function getMinPriceCart(): ?int
+    {
+        return $this->minPriceCart;
+    }
+
+    public function setMinPriceCart(?int $minPriceCart): self
+    {
+        $this->minPriceCart = $minPriceCart;
+
+        return $this;
+    }
+
+    public function getMinNbProductCart(): ?int
+    {
+        return $this->minNbProductCart;
+    }
+
+    public function setMinNbProductCart(?int $minNbProductCart): self
+    {
+        $this->minNbProductCart = $minNbProductCart;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
@@ -126,26 +215,38 @@ class Promotion
         return $this;
     }
 
-    public function getDiscountValue(): ?int
+    public function getDiscountFix(): ?int
     {
-        return $this->discountValue;
+        return $this->discountFix;
     }
 
-    public function setDiscountValue(?int $discountValue): self
+    public function setDiscountFix(?int $discountFix): self
     {
-        $this->discountValue = $discountValue;
+        $this->discountFix = $discountFix;
 
         return $this;
     }
 
-    public function getStatus(): ?bool
+    public function getFreeShippingFees(): ?bool
     {
-        return $this->status;
+        return $this->freeShippingFees;
     }
 
-    public function setStatus(bool $status): self
+    public function setFreeShippingFees(?bool $freeShippingFees): self
     {
-        $this->status = $status;
+        $this->freeShippingFees = $freeShippingFees;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }
@@ -162,7 +263,6 @@ class Promotion
     {
         if (!$this->products->contains($product)) {
             $this->products[] = $product;
-            $product->addPromotion($this);
         }
 
         return $this;
@@ -170,48 +270,37 @@ class Promotion
 
     public function removeProduct(Product $product): self
     {
-        if ($this->products->removeElement($product)) {
-            $product->removePromotion($this);
-        }
+        $this->products->removeElement($product);
 
         return $this;
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection|PromotionHistory[]
      */
-    public function getUsers(): Collection
+    public function getPromotionHistories(): Collection
     {
-        return $this->users;
+        return $this->promotionHistories;
     }
 
-    public function addUser(User $user): self
+    public function addPromotionHistory(PromotionHistory $promotionHistory): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->addPromotion($this);
+        if (!$this->promotionHistories->contains($promotionHistory)) {
+            $this->promotionHistories[] = $promotionHistory;
+            $promotionHistory->setPromotion($this);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): self
+    public function removePromotionHistory(PromotionHistory $promotionHistory): self
     {
-        if ($this->users->removeElement($user)) {
-            $user->removePromotion($this);
+        if ($this->promotionHistories->removeElement($promotionHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($promotionHistory->getPromotion() === $this) {
+                $promotionHistory->setPromotion(null);
+            }
         }
-
-        return $this;
-    }
-
-    public function getMinAmount(): ?float
-    {
-        return $this->minAmount;
-    }
-
-    public function setMinAmount(?float $minAmount): self
-    {
-        $this->minAmount = $minAmount;
 
         return $this;
     }

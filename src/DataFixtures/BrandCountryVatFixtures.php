@@ -5,9 +5,9 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use App\Entity\BrandCountryTVA;
+use App\Entity\BrandCountryVat;
 
-class BrandCountryTVAFixtures extends Fixture implements DependentFixtureInterface
+class BrandCountryVatFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
@@ -19,26 +19,26 @@ class BrandCountryTVAFixtures extends Fixture implements DependentFixtureInterfa
 
         $brand = $brandRepository->findOneByslug("farmitoo");
 
-        $brandCountryTVAList = [
+        $brandCountryVatList = [
             [
                 "brand" => $brand,
                 "country" => $france,
-                "tva" => 22
+                "vat" => 22
             ],
             [
                 "brand" => $brand,
                 "country" => $germany,
-                "tva" => 20
+                "vat" => 20
             ]
         ];
 
-        foreach ($brandCountryTVAList as $brandCountryTVAInfos) {
-            $brandCountryTVA = new BrandCountryTVA();
-            $brandCountryTVA->setBrand($brandCountryTVAInfos["brand"]);
-            $brandCountryTVA->setCountry($brandCountryTVAInfos["country"]);
-            $brandCountryTVA->setTVA($brandCountryTVAInfos["tva"]);
+        foreach ($brandCountryVatList as $brandCountryVatInfos) {
+            $brandCountryVat = new BrandCountryVat();
+            $brandCountryVat->setBrand($brandCountryVatInfos["brand"]);
+            $brandCountryVat->setCountry($brandCountryVatInfos["country"]);
+            $brandCountryVat->setVat($brandCountryVatInfos["vat"]);
 
-            $manager->persist($brandCountryTVA);
+            $manager->persist($brandCountryVat);
         }
 
         $manager->flush();

@@ -40,20 +40,26 @@ class User
     private $addresses;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Promotion::class, inversedBy="users")
-     */
-    private $promotions;
-
-    /**
      * @ORM\OneToMany(targetEntity=Cart::class, mappedBy="user")
      */
     private $carts;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Promotion::class, mappedBy="user")
+     */
+    private $promotions;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PromotionHistory::class, mappedBy="user")
+     */
+    private $promotionHistories;
+
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
-        $this->promotions = new ArrayCollection();
         $this->carts = new ArrayCollection();
+        $this->promotions = new ArrayCollection();
+        $this->promotionHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -128,30 +134,6 @@ class User
     }
 
     /**
-     * @return Collection|Promotion[]
-     */
-    public function getPromotions(): Collection
-    {
-        return $this->promotions;
-    }
-
-    public function addPromotion(Promotion $promotion): self
-    {
-        if (!$this->promotions->contains($promotion)) {
-            $this->promotions[] = $promotion;
-        }
-
-        return $this;
-    }
-
-    public function removePromotion(Promotion $promotion): self
-    {
-        $this->promotions->removeElement($promotion);
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Cart[]
      */
     public function getCarts(): Collection
@@ -175,6 +157,44 @@ class User
             // set the owning side to null (unless already changed)
             if ($cart->getUser() === $this) {
                 $cart->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Promotion[]
+     */
+    public function getPromotions(): Collection
+    {
+        return $this->promotions;
+    }
+
+    /**
+     * @return Collection|PromotionHistory[]
+     */
+    public function getPromotionHistories(): Collection
+    {
+        return $this->promotionHistories;
+    }
+
+    public function addPromotionHistory(PromotionHistory $promotionHistory): self
+    {
+        if (!$this->promotionHistories->contains($promotionHistory)) {
+            $this->promotionHistories[] = $promotionHistory;
+            $promotionHistory->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromotionHistory(PromotionHistory $promotionHistory): self
+    {
+        if ($this->promotionHistories->removeElement($promotionHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($promotionHistory->getUser() === $this) {
+                $promotionHistory->setUser(null);
             }
         }
 
