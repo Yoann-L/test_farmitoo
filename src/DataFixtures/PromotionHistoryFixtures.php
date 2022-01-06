@@ -17,10 +17,31 @@ class PromotionHistoryFixtures extends Fixture implements DependentFixtureInterf
 
         $cart = $cartRepository->findOneByReference("LHPG523");
         $promotion = $promotionRepository->findOneByCode("MERRY-CHRISTMAS");
+        $promotion2 = $promotionRepository->findOneByCode("WELCOME");
+        $promotion3 = $promotionRepository->findOneByCode("CODE-5");
+        $promotion4 = $promotionRepository->findOneByCode("CODE-20");
 
         $promotionHistories = [
             [
                 "promotion" => $promotion,
+                "user" => $cart->getUser(),
+                "cart" => $cart,
+                "created_at" => new DateTimeImmutable("2022-12-24 23:59:59")
+            ],
+            [
+                "promotion" => $promotion2,
+                "user" => $cart->getUser(),
+                "cart" => $cart,
+                "created_at" => new DateTimeImmutable("2022-12-24 23:59:59")
+            ],
+            [
+                "promotion" => $promotion3,
+                "user" => $cart->getUser(),
+                "cart" => $cart,
+                "created_at" => new DateTimeImmutable("2022-12-24 23:59:59")
+            ],
+            [
+                "promotion" => $promotion4,
                 "user" => $cart->getUser(),
                 "cart" => $cart,
                 "created_at" => new DateTimeImmutable("2022-12-24 23:59:59")

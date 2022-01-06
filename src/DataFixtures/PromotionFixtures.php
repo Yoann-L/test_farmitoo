@@ -33,7 +33,7 @@ class PromotionFixtures extends Fixture implements DependentFixtureInterface
             [
                 "code" => "MERRY-CHRISTMAS",
                 "status" => Promotion::PROMOTION_ENABLE,
-                "expirated_at" => $date2,
+                "expirated_at" => $date,
                 "usage_limit_by_user" => 1,
                 "nb_product_stock" => null,
                 "min_price_cart" => 200,
@@ -42,6 +42,34 @@ class PromotionFixtures extends Fixture implements DependentFixtureInterface
                 "discount_percentage" => null,
                 "discount_fix" => null,
                 "free_shipping_fees" => true,
+                "type" => Promotion::PROMOTION_TYPE_CART
+            ],
+            [
+                "code" => "CODE-5",
+                "status" => Promotion::PROMOTION_ENABLE,
+                "expirated_at" => $date,
+                "usage_limit_by_user" => 1,
+                "nb_product_stock" => null,
+                "min_price_cart" => 200,
+                "min_nb_product_cart" => null,
+                "user" => null,
+                "discount_percentage" => 5,
+                "discount_fix" => null,
+                "free_shipping_fees" => false,
+                "type" => Promotion::PROMOTION_TYPE_CART
+            ],
+            [
+                "code" => "CODE-20",
+                "status" => Promotion::PROMOTION_ENABLE,
+                "expirated_at" => $date2,
+                "usage_limit_by_user" => 1,
+                "nb_product_stock" => null,
+                "min_price_cart" => 200,
+                "min_nb_product_cart" => null,
+                "user" => null,
+                "discount_percentage" => 20,
+                "discount_fix" => null,
+                "free_shipping_fees" => false,
                 "type" => Promotion::PROMOTION_TYPE_CART
             ]
             
