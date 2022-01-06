@@ -48,7 +48,7 @@ Au niveau global, sera évalué :
 L'objectif n'est pas un code coverage de 100% ! 
 Mais un choix judicieux des choses à tester.
 
-## Install & Test the result
+## Install and test the result
 - Clone the project
 - Install the project
 ```sh
