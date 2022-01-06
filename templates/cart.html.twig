@@ -49,7 +49,7 @@
                     <div class="row">
                         <div class="col-md-2 col-lg-2 col-sm-3 col-xs-3">
                             <div class="logo">
-                                <a href="{{ path('cart') }}">
+                                <a href="#">
                                     <img src="images/logo/logo_farmitoo.png" alt="logo">
                                 </a>
                             </div>
@@ -331,92 +331,104 @@
         <div class="cart-main-area ptb--50 bg__white">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <form action="#">               
-                            <div class="table-content table-responsive">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th class="product-thumbnail">Image</th>
-                                            <th class="product-name">Article</th>
-                                            <th class="product-quantity">Quantité</th>
-                                            <th class="product-price">PU HT</th>
-                                            <th class="product-price">Total HT</th>
-                                            <th class="product-price">TVA</th>
-                                            <th class="product-subtotal">Montant TVA</th>
-                                            <th class="product-subtotal">Total TTC</th>
-                                            <th class="product-remove">Supprimer</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    	{% for item in cart.items %}
-                                    		<tr>
-	                                            <td class="product-thumbnail"><a href="#"><img src="images/product/4.png" alt="product img" /></a></td>
-	                                            <td class="product-name"><a href="#">{{ item.title }}</a></td>
-	                                            <td class="product-quantity"><input type="number" value="{{ item.amount }}" /></td>
-	                                            <td class="product-price"><span class="amount">{{ item.price }}€</span></td>
-	                                            <td class="product-price"><span class="amount">{{ item.price * item.amount }}€</span></td>
-	                                            <th class="product-subtotal">{{ item.vat }}%</th>
-	                                            <td class="product-subtotal">{{ item.vat * (item.price * item.amount) / 100 }}€</td>
-	                                            <td class="product-subtotal">{{ (item.price * item.amount) + item.vat * (item.price * item.amount) / 100 }}€</td>
-	                                            <td class="product-remove"><a href="#">X</a></td>
-	                                        </tr>
-                                    	{% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-8 col-sm-7 col-xs-12">
-                                    <div class="buttons-cart">
-                                        <input type="submit" value="Mettre à jour le panier" />
-                                        <a href="#">Continuer vos achats</a>
-                                    </div>
-                                    <div class="coupon">
-                                        <h3>Réduction</h3>
-                                        <p>Entrez un code promotionnel</p>
-                                        <input type="text" placeholder="Saisissez le code" />
-                                        <input type="submit" value="Appliquer" />
-                                    </div>
+                    {% if errorMessage is not null %}
+                        {{ errorMessage }}
+                    {% else %}
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <form action="#">               
+                                <div class="table-content table-responsive">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th class="product-thumbnail">Image</th>
+                                                <th class="product-name">Article</th>
+                                                <th class="product-quantity">Quantité</th>
+                                                <th class="product-price">PU HT</th>
+                                                <th class="product-price">Total HT</th>
+                                                <th class="product-price">TVA</th>
+                                                <th class="product-subtotal">Montant TVA</th>
+                                                <th class="product-subtotal">Total TTC</th>
+                                                <th class="product-remove">Supprimer</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        	{% for item in summary.items %}
+                                        		<tr>
+    	                                            <td class="product-thumbnail"><a href="#"><img src="images/product/4.png" alt="product img" /></a></td>
+    	                                            <td class="product-name"><a href="#">{{ item.title }}</a></td>
+    	                                            <td class="product-quantity"><input type="number" value="{{ item.quantity }}" /></td>
+    	                                            <td class="product-price"><span class="amount">{{ item.price }}€</span></td>
+    	                                            <td class="product-price"><span class="amount">{{ item.total_duty_free }}€</span></td>
+    	                                            <th class="product-subtotal">{{ item.vat }}%</th>
+    	                                            <td class="product-subtotal">{{ item.vat_amount }}€</td>
+    	                                            <td class="product-subtotal">{{ item.total }}€</td>
+    	                                            <td class="product-remove"><a href="#">X</a></td>
+    	                                        </tr>
+                                        	{% endfor %}
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div class="col-md-4 col-sm-5 col-xs-12">
-                                    <div class="cart_totals">
-                                        <h2>Montant total</h2>
-                                        <table>
-                                            <tbody>
-                                                <tr class="cart-subtotal">
-                                                    <th>total HT</th>
-                                                    <td><span class="amount">{{ cart.subtotal.total_duty_free }}€</span></td>
-                                                </tr>
-                                                {% for key, value in cart.subtotal.vat %}
-                                                	<tr class="cart-subtotal">
-	                                                    <th>TVA ({{ key }}%)</th>
-	                                                    <td><span class="amount">{{ value }}€</span></td>
-	                                                </tr>
-                                                {% endfor %}
-                                                <tr class="cart-subtotal">
-                                                    <th>Frais de port</th>
-                                                    <td><span class="amount">{{ cart.subtotal.shipping_fees }}€</span></td>
-                                                </tr>
-                                                <tr class="cart-subtotal">
-                                                    <th>Réduction</th>
-                                                    <td><span class="amount">-{{ cart.subtotal.promotion }}€</span></td>
-                                                </tr>
-                                              	<tr class="order-total">
-                                                    <th>Total TTC</th>
-                                                    <td>
-                                                        <strong><span class="amount">{{ cart.total }}€</span></strong>
-                                                    </td>
-                                                </tr>                                           
-                                            </tbody>
-                                        </table>
-                                        <div class="wc-proceed-to-checkout">
-                                            <a href="#">Procéder au paiement</a>
+                                <div class="row">
+                                    <div class="col-md-8 col-sm-7 col-xs-12">
+                                        <div class="buttons-cart">
+                                            <input type="submit" value="Mettre à jour le panier" />
+                                            <a href="#">Continuer vos achats</a>
+                                        </div>
+                                        <div class="coupon">
+                                            <h3>Réduction</h3>
+                                            <p>Entrez un code promotionnel</p>
+                                            <input type="text" placeholder="Saisissez le code" />
+                                            <input type="submit" value="Appliquer" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-5 col-xs-12">
+                                        <div class="cart_totals">
+                                            <h2>Montant total</h2>
+                                            <table>
+                                                <tbody>
+                                                    <tr class="cart-subtotal">
+                                                        <th>total HT</th>
+                                                        <td><span class="amount">{{ summary.subtotal.total_duty_free }}€</span></td>
+                                                    </tr>
+                                                    {% for key, value in summary.vat.detail_vat %}
+                                                    	<tr class="cart-subtotal">
+    	                                                    <th>TVA ({{ key }}%)</th>
+    	                                                    <td><span class="amount">{{ value }}€</span></td>
+    	                                                </tr>
+                                                    {% endfor %}
+                                                    <tr class="cart-subtotal">
+                                                        <th>Frais de port</th>
+                                                        <td>
+                                                            <span class="amount">
+                                                                {% if summary.promotion.cart.free_shipping_fees is defined %}
+                                                                    <strike>{{ summary.subtotal.shipping_fees }}€</strike>
+                                                                {% else %}
+                                                                    {{ summary.subtotal.shipping_fees }}€
+                                                                {%endif%}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="cart-subtotal">
+                                                        <th>Réduction</th>
+                                                        <td><span class="amount">-{{ summary.promotion.total }}€</span></td>
+                                                    </tr>
+                                                  	<tr class="order-total">
+                                                        <th>Total TTC</th>
+                                                        <td>
+                                                            <strong><span class="amount">{{ summary.total_with_promotion }}€</span></strong>
+                                                        </td>
+                                                    </tr>                                           
+                                                </tbody>
+                                            </table>
+                                            <div class="wc-proceed-to-checkout">
+                                                <a href="#">Procéder au paiement</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </form> 
-                    </div>
+                            </form> 
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
