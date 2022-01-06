@@ -5,7 +5,6 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Service\CartService;
 use Exception;
 
@@ -14,7 +13,7 @@ class MainController extends AbstractController
     /**
      * @Route("/{reference}", name="cart", methods={"GET"})
      */
-    public function index(EntityManagerInterface $em, CartService $cartService, string $reference = null): Response
+    public function index(CartService $cartService, string $reference = null): Response
     {
         $errorMessage = null;
         $summary = [];
