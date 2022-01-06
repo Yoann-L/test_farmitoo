@@ -49,21 +49,21 @@ L'objectif n'est pas un code coverage de 100% !
 Mais un choix judicieux des choses à tester.
 
 ## Install & Test the result
-- Clone project
-- Install project
+- Clone the project
+- Install the project
 ```sh
 composer install
 ```
-- Config .env file 
-    - copy/past `.env` file and rename it `.env.local`
-    - Comment ligne `DATABASE_URL="postgresql..."`
-    - Uncomment ligne `DATABASE_URL="mysql..."`
+- Config `.env` file :
+    - Copy/Past `.env` file and rename it `.env.local`
+    - Comment the ligne `DATABASE_URL="postgresql..."`
+    - Uncomment the ligne `DATABASE_URL="mysql..."`
     - Edit this ligne with your DB params (user, password and db_name)
 - Create DB : 
 ```sh
 php bin/console doctrine:database:create
 ```
-- Update DB : 
+- Update DB with migration files : 
 ```sh
 php bin/console doctrine:migrations:migrate
 ```
@@ -71,4 +71,13 @@ php bin/console doctrine:migrations:migrate
 ```sh
 php bin/console doctrine:fixtures:load
 ```
+- Launch the server : 
+```sh
+symfony server:start
+```
 - Go to : http://localhost:8000/LHPG523
+
+- Launch Unit tests : 
+```sh
+php ./vendor/bin/phpunit
+```
