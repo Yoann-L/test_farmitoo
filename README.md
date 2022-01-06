@@ -47,3 +47,28 @@ Au niveau global, sera évalué :
 #### Test
 L'objectif n'est pas un code coverage de 100% ! 
 Mais un choix judicieux des choses à tester.
+
+## Install & Test the result
+- Clone project
+- Install project
+```sh
+composer install
+```
+- Config .env file 
+    - copy/past `.env` file and rename it `.env.local`
+    - Comment ligne `DATABASE_URL="postgresql..."`
+    - Uncomment ligne `DATABASE_URL="mysql..."`
+    - Edit this ligne with your DB params (user, password and db_name)
+- Create DB : 
+```sh
+php bin/console doctrine:database:create
+```
+- Update DB : 
+```sh
+php bin/console doctrine:migrations:migrate
+```
+- Insert fixtures : 
+```sh
+php bin/console doctrine:fixtures:load
+```
+- Go to : http://localhost:8000/LHPG523
